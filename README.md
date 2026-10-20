@@ -4,7 +4,18 @@ A self-hosted web application for managing your music library with SpotiFLAC int
 
 ![Dashboard Preview](docs/dashboard-preview.png)
 
+<details>
+<summary>More screenshots</summary>
 
+| Downloads | Status |
+|---|---|
+| ![Downloads queue](docs/screenshots/downloads.png) | ![Status page](docs/screenshots/status.png) |
+| **Settings → Maintenance** | **Album** |
+| ![Maintenance card](docs/screenshots/settings-maintenance.png) | ![Album page](docs/screenshots/album.png) |
+
+</details>
+
+*Screenshots use demo data.*
 
 ## Quick Start
 
@@ -164,8 +175,11 @@ The dashboard provides an overview of your library with:
 - Active downloads with progress
 - Recently added albums
 - Quick actions (scan, search, settings)
+- Top-bar pills: download-server breaks ("Downloads open · break in 46m"), our download-service limit, and skipped providers
 
 ### Artists
+
+![Artists](docs/screenshots/artists.png)
 
 - View all artists in your library
 - Click an artist to see their full discography
@@ -179,15 +193,47 @@ The dashboard provides an overview of your library with:
 - Queue albums for download
 - Mark albums as "wanted" for later
 
+![Albums](docs/screenshots/albums.png)
+
 ### Downloads
+
+![Downloads queue](docs/screenshots/downloads.png)
 
 - Queue with live progress (`N / M tracks`), covers for albums, tracks and playlists
 - **Download next** moves a queued job to the front (the running one steps aside and resumes right after)
 - **Waiting** state instead of failures during scheduled server breaks (top-bar indicator) and download-service rate limits; jobs resume on their own
 - Files are laid out as `<Playlist>/<Album Artist>/[<Year>] <Album>/<NN> - <Artists> - <Title>.flac`, with an `.m3u8` per playlist
 - Tracks already in the downloads folder, or recorded in **Track History** (even if moved elsewhere, e.g. to Plex), are not downloaded again
-- Track History: searchable list of every saved track
+- Daily and hourly download caps (fixed or learned from past penalties), shown next to the running job
+- Track History: searchable list of every saved track, filterable by Downloaded / Skipped (tracks that keep failing with every provider, with "Try again")
 - Download history with retry options
+
+| History | Track History |
+|---|---|
+| ![Download history](docs/screenshots/downloads-history.png) | ![Track history](docs/screenshots/downloads-track-history.png) |
+
+The pages also work on a phone:
+
+<img src="docs/screenshots/mobile-downloads.png" alt="Downloads on mobile" width="260">
+
+### Status
+
+What can hold up downloads: the public download servers (scheduled breaks, outages), the Spotify API quota and the download service's limit on this install, with a 24 h / 7 d / 30 d history and an event list (caps, cooldowns, library checks).
+
+![Status page](docs/screenshots/status.png)
+
+![Status events](docs/screenshots/status-events.png)
+
+### Settings → Maintenance
+
+- **Clear failures:** retry every track that was skipped after repeated failures
+- **Clear cooldowns:** use skipped providers (e.g. qobuz after a rate limit) again from the next run
+- **Reset cap:** start the dynamic daily cap over
+- **Edit track history:** delete entries (one, a selection, or everything matching a search) so they download again
+
+![Maintenance card](docs/screenshots/settings-maintenance.png)
+
+![Track history editor](docs/screenshots/track-history-editor.png)
 
 ### Search & Direct URL Download
 
@@ -326,6 +372,7 @@ The dashboard provides an overview of your library with:
 ├── .env.example            # Copy to .env (git-ignored)
 ├── .github/workflows/      # Image build (context ./src)
 ├── CHANGELOG.md            # Changes on top of upstream
+├── docs/                   # dashboard-preview.png, screenshots/ (README images, demo data)
 ├── data/                   # Runtime state, created on the host (git-ignored)
 ├── downloads/              # Finished downloads (git-ignored)
 └── src/                    # Application (Docker build context)
